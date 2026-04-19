@@ -2,7 +2,7 @@
 
 A simple, working AI-powered customer support chatbot built with Python, the Anthropic SDK, and Streamlit. Clone it, add your API key, and have it running in under 20 minutes.
 
-**Blog Post:** [Build an AI Customer Support Chatbot in 20 Minutes](https://portfolio-next-wine-pi.vercel.app/blog/ai-chatbots-for-business)
+**Blog Post:** [Build an AI Customer Support Chatbot in 20 Minutes](https://ashkankardan.com/blog/ai-chatbots-for-business)
 
 ---
 
@@ -27,7 +27,7 @@ A simple, working AI-powered customer support chatbot built with Python, the Ant
 1. **Clone the repo**
 
    ```bash
-   git clone https://github.com/AshkanAI/ai-support-chatbot.git
+   git clone https://github.com/ashkankardan/ai-support-chatbot.git
    cd ai-support-chatbot
    ```
 
@@ -121,4 +121,4 @@ MIT
 
 ---
 
-Built by [Ashkan Kardan](https://portfolio-next-wine-pi.vercel.app) - AI Software Engineer
+Built by [Ashkan Kardan](https://ashkankardan.com) - AI Software Engineer
