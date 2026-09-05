@@ -1,3 +1,17 @@
+# Copyright (c) Lineaje, Inc. All rights reserved.
+# Lineaje UnifAI guardrail  version=2.0.0-alpha
+def _lineaje_load_gr_client():
+    """Lineaje-added: load gr_stub_client.py without a pip dependency."""
+    import sys as _s, importlib.util as _ilu
+    from pathlib import Path as _P
+    n = "_lineaje_gr_stub_client"
+    if n in _s.modules: return _s.modules[n]
+    h = _P(__file__).resolve().parent
+    _cand = next((d / "gr_stub_client.py" for d in [h, *h.parents][:8] if (d / "gr_stub_client.py").is_file()), h / "gr_stub_client.py")
+    _spec = _ilu.spec_from_file_location(n, _cand)
+    _s.modules[n] = _m = _ilu.module_from_spec(_spec)
+    _spec.loader.exec_module(_m); return _m
+
 import os
 import streamlit as st
 from anthropic import Anthropic, AuthenticationError, APIError
@@ -65,11 +79,16 @@ if prompt := st.chat_input("How can I help you today?"):
     st.chat_message("user").write(prompt)
 
     try:
+        _lineaje_messages = st.session_state.messages
+        # LINEAJE: enforce() `_lineaje_messages` at agent->llm pre_model — scan flagged AI_DAT_SEC_029 (Enforce decision logging, audit trail, and forensic readiness for AI-driven actions.). Mask/block; do not remove without review. site_id='site:sha256:7af0b9c1e205eed7d797878a7eafcee60de8da5084fa2f6ebb27d7c5d60f718f'
+        _gr_client = _lineaje_load_gr_client()
+        _gr_site = _gr_client.SiteDescriptor(site_id='site:sha256:7af0b9c1e205eed7d797878a7eafcee60de8da5084fa2f6ebb27d7c5d60f718f', phase='pre_model', boundary={'source': 'agent_message', 'sink': 'model'}, candidate_policies=[], fail_mode='ALLOW_WITH_AUDIT', source_type='agent', destination_type='llm')
+        _lineaje_messages = _gr_client.enforce(_gr_site, _lineaje_messages, content_type='application/json', variable_name='_lineaje_messages', source_file=__file__, before_line=68)
         response = client.messages.create(
             model="claude-sonnet-4-6",
             max_tokens=1024,
             system=SYSTEM_PROMPT,
-            messages=st.session_state.messages,
+            messages=_lineaje_messages,
         )
         reply = response.content[0].text
     except AuthenticationError:
